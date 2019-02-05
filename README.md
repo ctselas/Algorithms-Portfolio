@@ -21,3 +21,6 @@ Implementations of several important algorithms for Data Analysis and Machine Le
         
 5. classification_performace_ct.py\
     Given two vectors one with actual classes and one with the predicted, it calculates and visualizes performance metrics like AUC,           Confusion Matrix etc.
+    
+6. tutorial.py\
+    Demonstrates some examples of how to use 2. preprocessing_ct.py, 3. visualization_ct.py, 4. classification_ct.py, 5.classification_performace_ct.py.
