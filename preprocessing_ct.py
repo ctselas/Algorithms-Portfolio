@@ -2,9 +2,9 @@
 """
 Created on Tue Aug  7 10:02:57 2018
 
-@author: Christos.TSELAS , Data Analyst - Machine Learning Engineer christos.tselas@akka.eu ; ctselas@gmail.com
+@author: Christos.TSELAS , Data Analyst - Machine Learning Engineer; 
+ctselas@gmail.com
 """
-
 import pandas as pd
 import math
 from sklearn import preprocessing
@@ -14,11 +14,12 @@ random.seed(1)
 
 
 class Preprocess(object):
-    'Reads the desired csv as panda DataFrame and performs preprocessing in order to be ready for classification algorithms'    
+    '''Reads the desired csv as panda DataFrame and performs preprocessing in 
+        order to be ready for classification algorithms
+    '''
     #Attributes:
         #directory: where the dataset is
         #name: the name of the dataset
-        
     def __init__(self, name, directory = []):
         'Initiliaze the parameters' 
         self.directory = directory
@@ -31,7 +32,7 @@ class Preprocess(object):
         self.test_y = []
         self.flag = 1
     
-
+    
     def read_data(self, sample_size = 'All'):
         'Read dataset and keep samples from 0 to sample_size (integer)'
         if self.directory != []:
@@ -71,15 +72,19 @@ class Preprocess(object):
 
     def delete_constant_columns(self):
        'Deletes the columns that are constant and returns the names of them'
-       constants = list(self.train.columns[self.train.iloc[0] == np.sum(self.train,axis=0)/self.train.shape[0]])
-       self.train = self.train[self.train.columns[self.train.iloc[0] != np.sum(self.train,axis=0)/self.train.shape[0]]]
+       constants = list(self.train.columns[self.train.iloc[0] == 
+                                           np.sum(self.train,axis=0)/self.train.shape[0]])
+       self.train = self.train[self.train.columns[self.train.iloc[0] != 
+                                                  np.sum(self.train,axis=0)/self.train.shape[0]]]
        print ('\nThe constant columns are: ',len(constants), '\n', constants)
                 
        
     def delete_constant_rows(self):
        'Deletes the rows that are constant and returns the names of them'
-       constants = list(self.train[self.train[self.train.columns[0]] == np.sum(self.train,axis=1)/self.train.shape[1]].index)
-       self.train = self.train[self.train[self.train.columns[0]] != np.sum(self.train,axis=1)/self.train.shape[1]]
+       constants = list(self.train[self.train[self.train.columns[0]] == 
+                                   np.sum(self.train,axis=1)/self.train.shape[1]].index)
+       self.train = self.train[self.train[self.train.columns[0]] != 
+                               np.sum(self.train,axis=1)/self.train.shape[1]]
        print ('\nThe constant rows are: ',len(constants), '\n', constants)
        
                         
@@ -87,8 +92,9 @@ class Preprocess(object):
         'Split dataset to train,validation and test set, randomly or not depending of "perm"' 
         # check if the input is appropriate
         if type(per) != list or len(per) > 3:
-            print ('Please insert an appropriate input \nA list of at most 3 values that they sum to 1 like: \
-                \n[0.8, 0.1, 0.1], [Train, Validation, Test]')
+            print ('Please insert an appropriate input \
+                   \nA list of at most 3 values that they sum to 1 like: \
+                   \n[0.8, 0.1, 0.1], [Train, Validation, Test]')
             return 
         data_size = len(self.train)
         if perm == 1:
@@ -98,7 +104,8 @@ class Preprocess(object):
             self.test = self.train.iloc[int(math.ceil(per[0]*data_size)):]
             self.train = self.train.iloc[:int(math.ceil(per[0]*data_size))]
         elif len(per) == 3:
-            self.validation = self.train.iloc[int(math.ceil(per[0]*data_size)): int(math.ceil((per[0]+per[1])*data_size))]
+            self.validation = self.train.iloc[int(math.ceil(per[0]*data_size)): 
+                                        int(math.ceil((per[0]+per[1])*data_size))]
             self.test = self.train.iloc[int(math.ceil((per[0]+per[1])*data_size)):]
             self.train = self.train.iloc[:int(math.ceil(per[0]*data_size))]
         else:
@@ -132,12 +139,13 @@ class Preprocess(object):
             self.test[self.test.columns[:-1]] = self.scaler.transform(self.test[self.test.columns[:-1]])
         if type(self.validation) != list:
             self.validation[self.validation.columns[:-1]] = self.scaler.transform(self.validation[self.validation.columns[:-1]])
-         
-            
+               
         
     def series_to_supervised(self, n_in=1, n_out=1, dropnan=True):
-        'Convert series to supervised learning'
-        'Using default parameters is shifting the last variable (output) one step in order to be used as forecasting'
+        '''Convert series to supervised learning
+            Using default parameters is shifting the last variable (output) 
+            one step in order to be used as forecasting
+        '''
         n_vars = 1 if type(self.train) is list else self.train.shape[1]
         df = pd.DataFrame(self.train)
         cols, names = list(), list()
@@ -188,40 +196,7 @@ class Preprocess(object):
                  y[np.arrange(len(idx)), idx] = 1
                  return y
          
-
         
-if __name__ == "__main__" :  
-    directory = r'C:\Users\Christos.TSELAS\Documents\Projects_Christos_Tselas\4. Anomaly Detection\data'        
-    name = 'final_lex.csv'
-    sample_size = 800
-    # create the Preproces class
-    d =  Preprocess(name, directory)     
-       
-    d.read_data(sample_size)
-    d.delete_first_column()
-
-    d.first_column_become_row_names()
-
-    d.delete_first_column()
-   
-    d.delete_constant_rows()
-    d.delete_constant_columns()
-    
-    d.series_to_supervised()
-
-    d.split_data([0.8, 0.1, 0.1], perm = 1)
-    
-    d.scaling() 
-
-    d.split_in_out()
-    d.reshape_3D()
-    
-    train_X = d.train
-    train_y = d.train_y
-    test_X = d.test
-    test_y = d.test_y
-    val_X = d.validation
-    val_y = d.validation_y
 
 
 

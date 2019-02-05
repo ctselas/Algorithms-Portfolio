@@ -2,17 +2,15 @@
 """
 Created on Tue Aug 21 09:40:03 2018
 
-@author: Christos.TSELAS , Data Analyst - Machine Learning Engineer christos.tselas@akka.eu ; ctselas@gmail.com
+@author: Christos.TSELAS , Data Analyst - Machine Learning Engineer; 
+ctselas@gmail.com
 """
-import preprocessing_ct
 import classification_performace_ct
 from docx import Document 
 from sklearn.model_selection import cross_val_predict, cross_val_score
-
 import numpy as np
 from sklearn import tree
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import scale
 import graphviz
 import operator as op
@@ -24,7 +22,6 @@ import random
 random.seed(1)
 
 class Classification(object):
-    
     def __init__(self,train_x, train_y, name):
         'Initiliaze the parameters'
         self.names = train_x.columns
@@ -63,17 +60,14 @@ class Classification(object):
         document = Document(self.cwd + '\\Performance of Dataset ' + self.name[:-4] + '.docx')
         document.add_picture(self.cwd + "\\Decision_Tree" + self.name[:-4] + '.png',width=Inches(7), height=Inches(4))
         document.save(self.cwd + '\\Performance of Dataset ' + self.name[:-4] + '.docx')
-        
         return clf, meanauc
         
-         
-    
+
     def random_forests_all(self,  interval = [5, 35]):
         'Perform 3 different experiments using RF'
         n_trees, maxscores = self.random_forest_check_trees(interval) #check the best size (number of trees) of RF 
         importances, clf, meanauc = self.random_forest(n_trees) #find the most important features
         self.class_feature_importance(importances) #find the most important features for each class
-        
         return clf, meanauc
         
         
@@ -112,8 +106,8 @@ class Classification(object):
         plt.savefig(self.cwd + '\\RF_Performance_' + self.name[:-4] + '.png', bbox_inches='tight')
 #        self.document.add_picture(self.cwd + '\\RF_Performance_' + self.name[:-4] + '.png',width=Inches(7), height=Inches(4))
 #        self.document.save(self.cwd + '\\Report_' + self.name[:-4] + '.docx')
-        
         return indexmaxscores, maxscores
+    
     
     def random_forest(self, n_trees = 20):
         'Train a RF with all data and reveal the most important features'
@@ -129,7 +123,6 @@ class Classification(object):
         indices = np.argsort(importances)[::-1] #sort the features
         feature_list = self.train_x.columns[indices]  #names of features.
         ff = np.array(feature_list)
-        
 #        # Print the feature ranking
 #        print("Feature ranking:")
 #        self.document.add_heading('Feature ranking:')
@@ -153,7 +146,6 @@ class Classification(object):
         plt.savefig(self.cwd + '\\RF_Feature_importance' + self.name[:-4] + '.png', bbox_inches='tight')    
 #        self.document.add_picture(self.cwd + '\\RF_Feature_importance' + self.name[:-4] + '.png',width=Inches(7), height=Inches(4))
 #        self.document.save(self.cwd + '\\Report_' + self.name[:-4] + '.docx')
-
         return importances , clf, meanauc
     
     
@@ -161,12 +153,10 @@ class Classification(object):
         'To get the importance according to each class:'
         N, M = self.train_x.shape
         X = scale(self.train_x)
-            
         out = {}
         for c in set(self.train_y):
             out[c] = dict(
                     zip(range(N), np.mean(X[self.train_y == c, :], axis=0)*feature_importances))
-            
         return out    
     
 
@@ -194,34 +184,3 @@ class Classification(object):
         plt.savefig(self.cwd + '\\Feature_importance_per_class' + self.name[:-4] + '.png', bbox_inches='tight')
 #        self.document.add_picture(self.cwd + '\\Feature_importance_per_class' + self.name[:-4] + '.png',width=Inches(7), height=Inches(4))
 #        self.document.save(self.cwd + '\\Report_' + self.name[:-4] + '.docx')
-#        
-
-#
-if __name__ == "__main__" :  
-
-
-#    initial parameters
-    directory = r'\\aeroconseil.com\Shares\FPC\FDY\09-DATA_SCIENCES\DataAnalytics-Internal\Dionisis.K\Type3 Anomalies Data with labels'        
-    name = 'p1813V0035_labeled.csv'
-    #sample_size = 800
-
-    d1 =  preprocessing_ct.Preprocess(name, directory)# flag = 0 to not split in train and test. And keep all the dataset
-    d1.read_data()
-            
-    d1.first_column_become_row_names()
-    d1.delete_first_column()
-
-    d1.delete_constant_rows()
-    d1.delete_constant_columns()
-
-    d1.split_data_ordered(1)
-    d1.scaling()
-    
-    d1.split_in_out()
-                
-    train_x = d1.train
-    train_y = d1.train_y
-
-    d2 = Classification(train_x, train_y, name)
-#   d2.random_forests_all([20,40])
-    clf, meanauc = d2.decision_trees()

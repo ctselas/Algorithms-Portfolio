@@ -2,7 +2,8 @@
 """
 Created on Fri Aug 17 16:17:04 2018
 
-@author: Christos.TSELAS , Data Analyst - Machine Learning Engineer christos.tselas@akka.eu ; ctselas@gmail.com
+@author: Christos.TSELAS , Data Analyst - Machine Learning Engineer; 
+ctselas@gmail.com
 """
 
 import numpy as np
@@ -21,7 +22,6 @@ width = root.winfo_screenwidth()
 height = root.winfo_screenheight()
 
 class Visualization(object):
-    
     def __init__(self,data, name, flag = 1):
         'Initiliaze the parameters'
         self.flag = flag
