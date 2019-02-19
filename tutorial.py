@@ -12,7 +12,6 @@ import classification_performace_ct
 import numpy as np
 import random
 #%%  Preprocessing
-# initial parameters
 directory = r'C:\Users...'   # where the data are!     
 name = 'data.csv'
 
